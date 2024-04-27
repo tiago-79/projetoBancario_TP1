@@ -1,26 +1,15 @@
 package com.bancoeconomico.marketing;
 
 import com.bancoeconomico.Main;
-import com.bancoeconomico.model.Cliente;
 import com.bancoeconomico.model.ClientePF;
 import com.bancoeconomico.model.ClientePJ;
-import com.bancoeconomico.service.impl.OperacoesContaClientePJ;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ImportaClientes {
     public static List<String> importarClientes(String enderecoOrigem) throws IOException {
