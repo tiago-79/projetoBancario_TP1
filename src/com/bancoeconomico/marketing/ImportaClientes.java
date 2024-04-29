@@ -1,6 +1,7 @@
 package com.bancoeconomico.marketing;
 
 import com.bancoeconomico.Main;
+import com.bancoeconomico.model.Cliente;
 import com.bancoeconomico.model.ClientePF;
 import com.bancoeconomico.model.ClientePJ;
 
@@ -10,42 +11,39 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ImportaClientes {
     public static List<String> importarClientes(String enderecoOrigem) throws IOException {
-        List<String> novosClientes = new ArrayList<>();
 
         Path pathPessoas = Path.of(enderecoOrigem);
+        Stream<String> linhas = Files.lines(pathPessoas);
 
-        List<String[]> listaColunas = Files.lines(pathPessoas)
+        List<String[]> listaColunasClientes = Files.lines(pathPessoas)
                 .skip(1)
                 .map(linhaCliente -> linhaCliente.split(","))
+                .filter(linha -> "1".equals(linha[3]) || VerificaSeMaiorDeIdade.temMaisDe18(linha[1]))    // filtrar PJ e maiores de idade
                 .toList();
 
-        List<ClientePF> novosClientesPF = listaColunas.stream()
-                .filter(colunasCliente -> Integer.parseInt(colunasCliente[3]) == 2)
-                .filter(colunasCliente -> VerificaSeMaiorDeIdade.temMaisDe18(colunasCliente[1]))
-                .map(colunasCliente -> new ClientePF(colunasCliente[0], colunasCliente[2]))
+        return listaColunasClientes.stream()
+                .map(colunaCliente -> {
+                    return getCliente(colunaCliente);
+                })
+                .map(cliente -> {
+                    Main.deposito(cliente, BigDecimal.valueOf(50));
+                    return cliente;
+                })
+                .map(cliente -> (cliente.toString()))
                 .toList();
-        List<ClientePJ> novosClientesPJ = listaColunas.stream()
-                .filter(colunasCliente -> Integer.parseInt(colunasCliente[3]) == 1)
-                .map(colunasCliente -> new ClientePJ(colunasCliente[0], colunasCliente[2]))
-                .toList();
+    }
 
-        for(ClientePF clientePF : novosClientesPF){
-            Main.deposito(clientePF,BigDecimal.valueOf(50));
+    private static Cliente getCliente(String[] colunaCliente) {
+        if(Integer.parseInt(colunaCliente[3]) == 2){
+            ClientePF clientePF = new ClientePF(colunaCliente[0], colunaCliente[2]);
+            return clientePF;
+        } else {
+            ClientePJ clientePJ = new ClientePJ(colunaCliente[0], colunaCliente[2]);
+            return clientePJ;
         }
-        for(ClientePJ clientePJ : novosClientesPJ){
-            Main.deposito(clientePJ,BigDecimal.valueOf(50));
-        }
-
-        novosClientes.addAll(novosClientesPF.stream()
-                .map(clientePF -> clientePF.toString())
-                .toList());
-        novosClientes.addAll(novosClientesPJ.stream()
-                .map(clientePJ -> clientePJ.toString())
-                .toList());
-
-        return novosClientes;
     }
 }

@@ -39,10 +39,10 @@ public class Main {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //      Importar dados
-        List<String> novosClientesImportados = ImportaClientes.importarClientes("C:/Users/c122374/OneDrive - Caixa Economica Federal/Documentos/Cursos/Back End Java/Modulo III - Tecnicas de programacao I/Técnicas de Programação I - Pasta Geral/pessoas.csv");
+        List<String> novosClientesImportados = ImportaClientes.importarClientes("C:/Users/c122374/OneDrive - Caixa Economica Federal/Documentos/Cursos/Back End Java/Modulo III - Tecnicas de programacao I/projetoBancario_TP1/arquivos/pessoas.csv");
 
 //      Salvar em arquivo
-        Path destino = Path.of("C:/Users/c122374/OneDrive - Caixa Economica Federal/Documentos/Cursos/Back End Java/Modulo III - Tecnicas de programacao I/projetoBancario_TP1/arquivos/pessoas.csv");
+        Path destino = Path.of("C:/Users/c122374/OneDrive - Caixa Economica Federal/Documentos/Cursos/Back End Java/Modulo III - Tecnicas de programacao I/projetoBancario_TP1/arquivos/clientesMarketing.csv");
         Files.write(destino, novosClientesImportados);
     }
 
